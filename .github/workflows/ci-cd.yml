@@ -55,10 +55,10 @@ jobs:
         run: |
           docker build \
             --target production \
-            -t ${{ secrets.DOCKERHUB_USERNAME }}/pokemon-api:latest \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/node-devops-rest-api:latest \
             .
 
       - name: Push image to Docker Hub
         run: |
           docker push \
-            ${{ secrets.DOCKERHUB_USERNAME }}/pokemon-api:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/node-devops-rest-api:latest
