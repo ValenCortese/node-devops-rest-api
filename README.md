@@ -240,9 +240,9 @@ The project is prepared for future observability integration using:
 
 ---
 
-# 📦 CI/CD (Planned)
+# 📦 CI/CD
 
-Future CI/CD pipeline with GitHub Actions will include:
+CI/CD pipeline with GitHub Actions includes:
 
 - Automated tests
 - Docker image builds
