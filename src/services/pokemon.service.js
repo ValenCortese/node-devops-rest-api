@@ -5,7 +5,7 @@ const POKEAPI_BASE = 'https://pokeapi.co/api/v2/pokemon';
 // Obtener datos simplificados de un pokemon por nombre
 exports.fetchPokemonByName = async (name) => {
   try {
-    const { data } = await axios.get(`${POKEAPI_BASE}/${name.toLowerCase()}`);
+    const { data } = await axios.get(`${POKEAPI_BASE}/${String(name).toLowerCase()}`);
     return {
       name: data.name,
       height: data.height,
@@ -22,7 +22,7 @@ exports.fetchPokemonByName = async (name) => {
 
 // Obtener un pokemon aleatorio
 exports.fetchRandomPokemon = async () => {
-  // Pokédex nacional tiene 1010 pokémon (hasta Gen 9, ajustar si es necesario)
+  // Pokédex nacional tiene 1010 pokémon (hasta Gen 9)
   const maxId = 1010;
   const randomId = Math.floor(Math.random() * maxId) + 1;
   return exports.fetchPokemonByName(randomId);
