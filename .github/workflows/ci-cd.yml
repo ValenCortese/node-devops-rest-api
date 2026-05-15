@@ -62,3 +62,9 @@ jobs:
         run: |
           docker push \
             ${{ secrets.DOCKERHUB_USERNAME }}/node-devops-rest-api:latest
+
+      - name: Trigger Render Deploy
+        run: |
+          curl "$RENDER_DEPLOY_HOOK"
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}

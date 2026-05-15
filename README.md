@@ -10,13 +10,13 @@ This project was developed as part of a DevOps/backend assignment and includes:
 - Docker Compose
 - Error handling
 - Observability-ready architecture
+- CI/CD with GitHub Actions
+- Docker Hub publishing
+- Continuous deployment
 
 Future improvements:
 - OpenTelemetry integration
 - Grafana stack (Loki, Tempo, Prometheus)
-- CI/CD with GitHub Actions
-- Docker Hub publishing
-- Continuous deployment
 
 ---
 
