@@ -13,3 +13,7 @@ docker-data
 .vscode
 
 *.log
+
+grafana-data
+loki-data
+tempo-data
