@@ -1,10 +1,12 @@
 const axios = require('axios');
+const { pokemonFetchCounter, pokemonFetchErrors } = require('../lib/metrics');
 
 const POKEAPI_BASE = 'https://pokeapi.co/api/v2/pokemon';
 
 // Obtener datos simplificados de un pokemon por nombre
 exports.fetchPokemonByName = async (name) => {
   try {
+    pokemonFetchCounter.add(1, { source: 'pokeapi' });
     const { data } = await axios.get(`${POKEAPI_BASE}/${String(name).toLowerCase()}`);
     return {
       name: data.name,
@@ -13,6 +15,7 @@ exports.fetchPokemonByName = async (name) => {
       types: data.types.map(t => t.type.name)
     };
   } catch (error) {
+    pokemonFetchErrors.add(1, { source: 'pokeapi' });
     if (error.response && error.response.status === 404) {
       return null;
     }

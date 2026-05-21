@@ -1,6 +1,6 @@
 # 🌟 Pokemon API - DevOps & Observability Project
 
-API REST desarrollada con Node.js y Express para consultar información de Pokémon consumiendo la PokéAPI, integrando prácticas modernas de DevOps, CI/CD, Docker y observabilidad con OpenTelemetry + Grafana Stack.
+API REST desarrollada con Node.js y Express para consultar información de Pokémon consumiendo la PokéAPI, integrando prácticas modernas de DevOps, CI/CD, Docker y observabilidad con OpenTelemetry + Grafana Cloud.
 
 ---
 
@@ -20,12 +20,11 @@ API REST desarrollada con Node.js y Express para consultar información de Poké
 - **Pino HTTP**
 
 ### 👁️ Observabilidad
-- **OpenTelemetry**
-- **Grafana**
-- **Loki**
-- **Tempo**
-- **Prometheus**
-- **OpenTelemetry Collector**
+- **OpenTelemetry (SDK directo, sin collector local)**
+- **Grafana Cloud**
+- **Loki (Logs)**
+- **Tempo (Traces)**
+- **Prometheus/Mimir (Metrics)**
 
 ### 🛠️ DevOps
 - **Docker**
@@ -48,11 +47,11 @@ API REST desarrollada con Node.js y Express para consultar información de Poké
 - ✅ CI/CD con GitHub Actions
 - ✅ Publicación automática de imágenes en Docker Hub
 - ✅ Deploy automático en Render
-- ✅ Logs centralizados con Loki
-- ✅ Traces distribuidos con Tempo
-- ✅ Métricas con Prometheus
-- ✅ Dashboards con Grafana
-- ✅ Instrumentación con OpenTelemetry
+- ✅ Logs centralizados en Grafana Cloud (Loki)
+- ✅ Traces distribuidos en Grafana Cloud (Tempo)
+- ✅ Métricas en Grafana Cloud (Prometheus/Mimir)
+- ✅ Dashboard unificado en Grafana
+- ✅ Instrumentación con OpenTelemetry (SDK directo)
 
 ---
 
@@ -64,22 +63,8 @@ API REST desarrollada con Node.js y Express para consultar información de Poké
 │   └── workflows/
 │       └── ci-cd.yml
 │
-├── observability/
-│   ├── grafana/
-│   │   ├── dashboards/
-│   │   └── provisioning/
-│   │
-│   ├── loki/
-│   │   └── local-config.yaml
-│   │
-│   ├── otel/
-│   │   └── otel-collector-config.yaml
-│   │
-│   ├── prometheus/
-│   │   └── prometheus.yml
-│   │
-│   └── tempo/
-│       └── tempo.yaml
+├── grafana/
+│   └── dashboard-1779399247265.json
 │
 ├── src/
 │   ├── lib/
@@ -150,7 +135,7 @@ docker run -p 3000:3000 pokemon-api
 
 ## 🐳 Docker Compose
 
-**Levantar stack completo:**
+**Levantar API:**
 ```bash
 docker compose up -d --build
 ```
@@ -160,10 +145,6 @@ docker compose up -d --build
 | Servicio | URL |
 |----------|-----|
 | **API** | `http://localhost:3000` |
-| **Grafana** | `http://localhost:3001` |
-| **Prometheus** | `http://localhost:9090` |
-| **Loki** | `http://localhost:3100` |
-| **Tempo** | `http://localhost:3200` |
 
 ---
 
@@ -199,16 +180,14 @@ GET /error-test
 
 ## 📊 Observabilidad
 
-La aplicación está instrumentada utilizando **OpenTelemetry**.
+La aplicación está instrumentada con **OpenTelemetry** y envía telemetría **directo a Grafana Cloud** vía OTLP (sin collector local).
 
-### 🔥 Stack de observabilidad
-- **Grafana**: Visualización de dashboards.
-- **Loki**: Almacenamiento y consulta de logs.
-- **Tempo**: Almacenamiento de traces distribuidos.
-- **Prometheus**: Recolección de métricas.
-- **OpenTelemetry Collector**: Recepción y exportación de telemetría.
+### ⚙️ Configurar Grafana Cloud
+1. Crear un API Key con permisos para **Metrics/Logs/Traces**.
+2. Tomar el **OTLP Endpoint** desde tu stack (sección OpenTelemetry).
+3. Completar variables en `.env` usando la plantilla en `.env.example`.
 
-### 📈 Cómo probar observabilidad
+### 📈 Generar tráfico
 
 **1️⃣ Generar tráfico**
 ```bash
@@ -217,17 +196,21 @@ curl http://localhost:3000/pokemon/pikachu
 curl http://localhost:3000/error-test
 ```
 
-**2️⃣ Ver traces**
-- Ingresar a Grafana: `http://localhost:3001`
-- Ir a: `Explore -> Tempo`
+**2️⃣ Ver traces (Tempo)**
+- Grafana Cloud → `Explore` → `Tempo`
+- TraceQL: `{resource.service.name="pokemon-api"}`
 
-**3️⃣ Ver logs**
-- En Grafana ir a: `Explore -> Loki`
-- Query: `{}`
+**3️⃣ Ver logs (Loki)**
+- Grafana Cloud → `Explore` → `Loki`
+- LogQL: `{service_name="pokemon-api"}`
 
-**4️⃣ Ver métricas**
-- En Grafana ir a: `Explore -> Prometheus`
-- Ejemplo: `http_server_duration_bucket`
+**4️⃣ Ver métricas (Prometheus/Mimir)**
+- Grafana Cloud → `Explore` → `Prometheus`
+- Ejemplo: `sum(rate(http_requests_total[5m]))`
+- p95: `histogram_quantile(0.95, sum by (le) (rate(http_request_duration_ms_bucket_total[5m])))`
+
+### 📊 Dashboard unificado
+Importá el dashboard incluido en [grafana/dashboard-1779399247265.json](grafana/dashboard-1779399247265.json) y seleccioná tus datasources de Grafana Cloud para Loki, Tempo y Prometheus.
 
 ---
 
@@ -265,7 +248,8 @@ LOG_LEVEL=info
 ### OpenTelemetry
 ```env
 OTEL_SERVICE_NAME=pokemon-api
-OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318/v1/traces
+OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp-gateway-<region>.grafana.net/otlp
+OTEL_EXPORTER_OTLP_HEADERS=Authorization=Basic <BASE64_INSTANCE_ID:API_KEY>
 ```
 
 ---
