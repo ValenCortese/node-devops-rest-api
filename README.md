@@ -1,51 +1,93 @@
-# PokeAPI REST API
+# 🌟 Pokemon API - DevOps & Observability Project
 
-REST API built with Node.js and Express consuming data from PokéAPI.
-
-This project was developed as part of a DevOps/backend assignment and includes:
-
-- REST API
-- Automated testing
-- Docker multi-stage builds
-- Docker Compose
-- Error handling
-- Observability-ready architecture
-- CI/CD with GitHub Actions
-- Docker Hub publishing
-- Continuous deployment
-
-Future improvements:
-- OpenTelemetry integration
-- Grafana stack (Loki, Tempo, Prometheus)
+API REST desarrollada con Node.js y Express para consultar información de Pokémon consumiendo la PokéAPI, integrando prácticas modernas de DevOps, CI/CD, Docker y observabilidad con OpenTelemetry + Grafana Stack.
 
 ---
 
-# 🚀 Tech Stack
+## 🚀 Tecnologías utilizadas
 
-- Node.js
-- Express
-- Axios
-- pnpm
-- Jest
-- Supertest
-- Docker
-- Docker Compose
+### 💻 Backend
+- **Node.js 22**
+- **Express**
+- **Axios**
+
+### 🧪 Testing
+- **Jest**
+- **Supertest**
+
+### 📝 Logging
+- **Pino**
+- **Pino HTTP**
+
+### 👁️ Observabilidad
+- **OpenTelemetry**
+- **Grafana**
+- **Loki**
+- **Tempo**
+- **Prometheus**
+- **OpenTelemetry Collector**
+
+### 🛠️ DevOps
+- **Docker**
+- **Docker Compose**
+- **GitHub Actions**
+- **Docker Hub**
+- **Render**
 
 ---
 
-# 📁 Project Structure
+## 📦 Características
+
+- ✅ API REST con Express
+- ✅ Consumo de PokéAPI
+- ✅ Endpoint de healthcheck
+- ✅ Endpoint de error intencional para observabilidad
+- ✅ Tests unitarios e integración
+- ✅ Docker multi-stage build
+- ✅ Docker Compose
+- ✅ CI/CD con GitHub Actions
+- ✅ Publicación automática de imágenes en Docker Hub
+- ✅ Deploy automático en Render
+- ✅ Logs centralizados con Loki
+- ✅ Traces distribuidos con Tempo
+- ✅ Métricas con Prometheus
+- ✅ Dashboards con Grafana
+- ✅ Instrumentación con OpenTelemetry
+
+---
+
+## 📁 Estructura del proyecto
 
 ```txt
-project/
+.
+├── .github/
+│   └── workflows/
+│       └── ci-cd.yml
+│
+├── observability/
+│   ├── grafana/
+│   │   ├── dashboards/
+│   │   └── provisioning/
+│   │
+│   ├── loki/
+│   │   └── local-config.yaml
+│   │
+│   ├── otel/
+│   │   └── otel-collector-config.yaml
+│   │
+│   ├── prometheus/
+│   │   └── prometheus.yml
+│   │
+│   └── tempo/
+│       └── tempo.yaml
 │
 ├── src/
+│   ├── lib/
+│   ├── middlewares/
+│   ├── routes/
 │   ├── app.js
 │   ├── server.js
-│   │
-│   ├── routes/
-│   ├── controllers/
-│   ├── services/
-│   └── middlewares/
+│   └── tracing.js
 │
 ├── tests/
 │
@@ -58,207 +100,217 @@ project/
 
 ---
 
-# 📡 API Endpoints
+## ⚙️ Instalación local
 
-## Healthcheck
-
-```http
-GET /health
+**1️⃣ Clonar repositorio**
+```bash
+git clone https://github.com/TU_USUARIO/node-devops-rest-api.git
+cd node-devops-rest-api
 ```
 
-Response:
-
-```json
-{
-  "status": "ok"
-}
-```
-
----
-
-## Get Pokémon by name
-
-```http
-GET /pokemon/:name
-```
-
-Example:
-
-```http
-GET /pokemon/pikachu
-```
-
-Response:
-
-```json
-{
-  "name": "pikachu",
-  "height": 4,
-  "weight": 60,
-  "types": ["electric"]
-}
-```
-
----
-
-## Random Pokémon
-
-```http
-GET /pokemon/random
-```
-
-Returns a random Pokémon from PokéAPI.
-
----
-
-## Error Testing Endpoint
-
-```http
-GET /error-test
-```
-
-This endpoint intentionally throws an error for observability and monitoring testing.
-
-Response:
-
-```json
-{
-  "error": "Internal Server Error"
-}
-```
-
----
-
-# 🛠️ Local Development
-
-## Install dependencies
-
+**2️⃣ Instalar dependencias**
 ```bash
 pnpm install
 ```
 
----
-
-## Start development server
-
+**3️⃣ Ejecutar aplicación**
 ```bash
 pnpm dev
 ```
+*Servidor disponible en: http://localhost:3000*
 
 ---
 
-## Run tests
+## 🧪 Ejecutar tests
 
 ```bash
 pnpm test
 ```
 
----
-
-# 🧪 Testing
-
-This project uses:
-
-- Jest
-- Supertest
-
-Test coverage includes:
-
+**Tests implementados:**
 - Health endpoint
-- Pokémon endpoints
-- Error handling
-- HTTP status validation
+- Pokémon endpoint
+- Error endpoint
 
 ---
 
-# 🐳 Docker
+## 🐳 Docker
 
-## Build production image
-
+**Build de imagen**
 ```bash
-docker build --target production -t pokemon-api .
+docker build -t pokemon-api .
 ```
 
----
-
-## Run container
-
+**Ejecutar contenedor**
 ```bash
 docker run -p 3000:3000 pokemon-api
 ```
 
 ---
 
-# 🐳 Docker Compose
+## 🐳 Docker Compose
 
-## Start services
-
+**Levantar stack completo:**
 ```bash
-docker compose up
+docker compose up -d --build
+```
+
+### 🔍 Servicios disponibles
+
+| Servicio | URL |
+|----------|-----|
+| **API** | `http://localhost:3000` |
+| **Grafana** | `http://localhost:3001` |
+| **Prometheus** | `http://localhost:9090` |
+| **Loki** | `http://localhost:3100` |
+| **Tempo** | `http://localhost:3200` |
+
+---
+
+## 📡 Endpoints API
+
+### Healthcheck
+```http
+GET /health
+```
+
+**Respuesta:**
+```json
+{
+  "status": "ok"
+}
+```
+
+### Obtener Pokémon
+```http
+GET /pokemon/:name
+```
+
+**Ejemplo:**
+`GET /pokemon/pikachu`
+
+### Endpoint de error intencional
+```http
+GET /error-test
+```
+*Utilizado para demostrar logs, traces, monitoreo y observabilidad.*
+
+---
+
+## 📊 Observabilidad
+
+La aplicación está instrumentada utilizando **OpenTelemetry**.
+
+### 🔥 Stack de observabilidad
+- **Grafana**: Visualización de dashboards.
+- **Loki**: Almacenamiento y consulta de logs.
+- **Tempo**: Almacenamiento de traces distribuidos.
+- **Prometheus**: Recolección de métricas.
+- **OpenTelemetry Collector**: Recepción y exportación de telemetría.
+
+### 📈 Cómo probar observabilidad
+
+**1️⃣ Generar tráfico**
+```bash
+curl http://localhost:3000/health
+curl http://localhost:3000/pokemon/pikachu
+curl http://localhost:3000/error-test
+```
+
+**2️⃣ Ver traces**
+- Ingresar a Grafana: `http://localhost:3001`
+- Ir a: `Explore -> Tempo`
+
+**3️⃣ Ver logs**
+- En Grafana ir a: `Explore -> Loki`
+- Query: `{}`
+
+**4️⃣ Ver métricas**
+- En Grafana ir a: `Explore -> Prometheus`
+- Ejemplo: `http_server_duration_bucket`
+
+---
+
+## 🔄 CI/CD
+
+Pipeline implementado con GitHub Actions.
+
+**✅ El pipeline realiza:**
+- Instalación de dependencias
+- Ejecución de tests
+- Build Docker
+- Push a Docker Hub
+- Deploy automático en Render
+
+### 🐳 Docker Hub
+Las imágenes se publican automáticamente en: `docker.io/TU_USUARIO/node-devops-rest-api`
+
+### ☁️ Deploy
+Aplicación desplegada en Render utilizando:
+- Docker image
+- Deploy Hook
+- Integración con GitHub Actions
+
+---
+
+## 🔐 Variables de entorno
+
+### API
+```env
+PORT=3000
+NODE_ENV=production
+LOG_LEVEL=info
+```
+
+### OpenTelemetry
+```env
+OTEL_SERVICE_NAME=pokemon-api
+OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318/v1/traces
 ```
 
 ---
 
-## Run in detached mode
+## 🚀 GitHub Actions
 
-```bash
-docker compose up -d
-```
+**Secrets utilizados:**
+
+| Secret | Descripción |
+|--------|-------------|
+| `DOCKERHUB_USERNAME` | Usuario Docker Hub |
+| `DOCKERHUB_TOKEN` | Token Docker Hub |
+| `RENDER_DEPLOY_HOOK` | Deploy hook Render |
 
 ---
 
-## Stop services
+## 📌 Comandos útiles
 
+**Ver logs**
+```bash
+docker logs pokemon-api
+```
+
+**Ver containers**
+```bash
+docker ps
+```
+
+**Reiniciar stack**
 ```bash
 docker compose down
+docker compose up -d --build
 ```
 
 ---
 
-# 🧱 Multi-Stage Docker Build
-
-The project uses a multi-stage Docker build:
-
-- Base stage
-- Dependencies stage
-- Test stage
-- Production stage
-
-This approach reduces image size and separates development/testing dependencies from production runtime.
+## 🧠 Conceptos aplicados
+- REST APIs & Testing
+- Docker multi-stage builds
+- CI/CD & Infrastructure as Code
+- Observabilidad (Distributed Tracing, Logging centralizado, Métricas)
+- DevOps básico & Contenedores
 
 ---
 
-# 🔥 Observability (Planned)
+## 👨‍💻 Autor
 
-The project is prepared for future observability integration using:
-
-- OpenTelemetry
-- Grafana
-- Loki
-- Tempo
-- Prometheus
-
----
-
-# 📦 CI/CD
-
-CI/CD pipeline with GitHub Actions includes:
-
-- Automated tests
-- Docker image builds
-- Docker Hub publishing
-- Continuous deployment
-
----
-
-# 🌐 External API
-
-This project consumes:
-
-- https://pokeapi.co
-
----
-
-# 📄 License
-
-Educational project.
+Proyecto realizado con fines educativos y de práctica DevOps / Backend / Observabilidad.
