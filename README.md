@@ -234,6 +234,8 @@ Aplicación desplegada en Render utilizando:
 - Deploy Hook
 - Integración con GitHub Actions
 
+El deploy en Render se dispara con `imgURL` apuntando a un digest inmutable de Docker Hub (`docker.io/TU_USUARIO/node-devops-rest-api@sha256:...`), evitando el uso de `latest`.
+
 ---
 
 ## 🔐 Variables de entorno
